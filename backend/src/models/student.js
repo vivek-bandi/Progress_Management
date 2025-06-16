@@ -4,7 +4,7 @@ const studentSchema = new mongoose.Schema({
   name : String,
   email : String,
   phone : Number,
-  cfHandle : Number,
+  cfHandle : String,
   currentRating : Number,
   maxRating : Number,
   cfLastUpdated : Date,
@@ -18,4 +18,4 @@ const studentSchema = new mongoose.Schema({
   }
 },{timestamps : true});
 
-module.exports = mongoose.Model('Student',studentSchema);
+module.exports = mongoose.model('Student',studentSchema);

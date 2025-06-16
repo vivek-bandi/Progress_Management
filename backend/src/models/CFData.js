@@ -18,7 +18,7 @@ const problemSchema = new mongoose.Schema({
 });
 const cfDataSchema = new mongoose.Schema({
   //context from https://codeforces.com/api/user.status?handle=Fefer_Ivan code forces api
-  studentId : mongoose.Schema.Types.ObjectId,
+  studentId : { type: mongoose.Schema.Types.ObjectId, ref: 'Student' },
   ratingHistory : [contestSchema],
   problemStats : [problemSchema],
   lastSync : Date,

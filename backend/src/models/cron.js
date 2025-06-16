@@ -7,4 +7,4 @@ const cronSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.Model('CronSettings',cronSchema);
+module.exports = mongoose.model('CronSettings',cronSchema);
