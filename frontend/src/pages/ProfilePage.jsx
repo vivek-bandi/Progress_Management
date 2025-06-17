@@ -77,7 +77,7 @@ export default function ProfilePage() {
           problemFiltered.reduce((sum, p) => sum + p.rating, 0) / totalSolved
         ).toFixed(1)
       : 0;
-  const avgPerDay = (totalSolved / problemDays).toFixed(2);
+  const avgPerDay = Math.round(totalSolved / problemDays);
 
   // Rating buckets for bar chart
   const buckets = [
