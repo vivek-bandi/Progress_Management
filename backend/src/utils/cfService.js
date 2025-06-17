@@ -19,10 +19,23 @@ function processContests(ratingHistory, submissions) {
   return ratingHistory.map(r => {
     const contestDate = new Date(r.ratingUpdateTimeSeconds * 1000);
 
-    const unsolved = submissions.filter(s => 
-      s.creationTimeSeconds < r.ratingUpdateTimeSeconds &&
-      s.verdict !== 'OK'
+
+    const contestSubmissions = submissions.filter(
+      s => s.problem.contestId === r.contestId
     );
+
+    const problemsAttempted = new Set();
+    const problemsSolved = new Set();
+
+    contestSubmissions.forEach(s => {
+      const pid = `${s.problem.contestId}-${s.problem.index}`;
+      problemsAttempted.add(pid);
+      if (s.verdict === 'OK') {
+        problemsSolved.add(pid);
+      }
+    });
+
+    const problemsUnsolvedCount = problemsAttempted.size - problemsSolved.size;
 
     return {
       contestId: r.contestId,
@@ -32,7 +45,7 @@ function processContests(ratingHistory, submissions) {
       newRating: r.newRating,
       ratingChange: r.newRating - r.oldRating,
       contestDate,
-      problemsUnsolved: unsolved.length
+      problemsUnsolved: problemsUnsolvedCount >= 0 ? problemsUnsolvedCount : 0
     };
   });
 }
