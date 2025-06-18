@@ -3,9 +3,12 @@ import { useParams } from "react-router-dom";
 import {
   getStudentProfile,
   getStudentContestHistory,
-} from "../services/studentService";
+} from "../services/StudentService";
 import RatingGraph from "../components/RatingGraph";
 import BarChart from "../components/BarChart";
+import CalendarHeatmap from "react-calendar-heatmap";
+import "react-calendar-heatmap/dist/styles.css";
+import HeatMap from "../components/HeatMap";
 
 export default function ProfilePage() {
   const { id } = useParams();
@@ -18,6 +21,16 @@ export default function ProfilePage() {
   const [problemDays, setProblemDays] = useState(7);
   const [problemStats, setProblemStats] = useState([]);
   const [problemFiltered, setProblemFiltered] = useState([]);
+
+  const dateCountMap = {};
+  problemFiltered.forEach((p) => {
+    const date = new Date(p.solvedDate).toISOString().slice(0, 10);
+    dateCountMap[date] = (dateCountMap[date] || 0) + 1;
+  });
+  const heatmapData = Object.entries(dateCountMap).map(([date, count]) => ({
+    date,
+    count,
+  }));
 
   useEffect(() => {
     async function fetchData() {
@@ -65,7 +78,6 @@ export default function ProfilePage() {
   if (!student)
     return <p className="text-center text-red-500">Profile not found.</p>;
 
-  // Calculate problem solving stats
   const mostDifficult = problemFiltered.reduce(
     (max, p) => (!max || p.rating > max.rating ? p : max),
     null
@@ -236,6 +248,14 @@ export default function ProfilePage() {
           </h3>
           <BarChart data={buckets} />
         </div>
+      </div>
+
+      <div className="mt-8">
+        <HeatMap
+          data={heatmapData}
+          startDate={new Date(Date.now() - problemDays * 24 * 60 * 60 * 1000)}
+          endDate={new Date()}
+        />
       </div>
     </div>
   );

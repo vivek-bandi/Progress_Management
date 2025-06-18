@@ -44,13 +44,6 @@ exports.getStudentProfile = async (req, res) => {
   res.json(profile);
 };
 
-exports.sync = async (req, res) => {
-  const student = await Student.findById(req.params.id);
-  if (!student) return res.status(404).send('Student not found');
-
-  const cfData = await fetchAndStoreCFData(student);
-  res.json(cfData);
-};
 
 exports.exportCSV = async (req, res) => {
   const students = await Student.find({}).lean();

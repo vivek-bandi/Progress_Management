@@ -7,7 +7,6 @@ router.post('/',studentCtrl.add);
 router.put('/:id',studentCtrl.update);
 router.delete('/:id',studentCtrl.delete);
 router.get('/:id/profile',studentCtrl.getStudentProfile);
-router.post('/:id/sync',studentCtrl.sync);
 router.get('/export/csv',studentCtrl.exportCSV);
 router.get('/profile/:id/contests',studentCtrl.getContentHistory);
 
