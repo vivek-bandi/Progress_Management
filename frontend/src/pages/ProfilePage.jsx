@@ -3,17 +3,17 @@ import { useParams } from "react-router-dom";
 import {
   getStudentProfile,
   getStudentContestHistory,
+  updateStudent,
 } from "../services/StudentService";
 import RatingGraph from "../components/RatingGraph";
 import BarChart from "../components/BarChart";
-import CalendarHeatmap from "react-calendar-heatmap";
-import "react-calendar-heatmap/dist/styles.css";
 import HeatMap from "../components/HeatMap";
 
 export default function ProfilePage() {
   const { id } = useParams();
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [reminderLoading, setReminderLoading] = useState(false);
 
   const [contestDays, setContestDays] = useState(30);
   const [contestHistory, setContestHistory] = useState([]);
@@ -73,6 +73,25 @@ export default function ProfilePage() {
       setProblemFiltered(filtered);
     }
   }, [problemDays, problemStats]);
+
+  const handleToggleReminder = async () => {
+    setReminderLoading(true);
+    try {
+      await updateStudent(student.studentId._id, {
+        emailReminderDisable: !student.studentId.emailReminderDisable,
+      });
+      setStudent({
+        ...student,
+        studentId: {
+          ...student.studentId,
+          emailReminderDisable: !student.studentId.emailReminderDisable,
+        },
+      });
+    } catch (err) {
+      alert("Failed to update reminder setting");
+    }
+    setReminderLoading(false);
+  };
 
   if (loading) return <p className="text-center text-blue-500">Loading...</p>;
   if (!student)
@@ -134,6 +153,52 @@ export default function ProfilePage() {
         <p>
           <strong className="text-sky-700">Last Sync:</strong>{" "}
           {new Date(student.lastSync).toLocaleString()}
+        </p>
+        <p>
+          <strong className="text-sky-700">Reminder Emails Sent:</strong>{" "}
+          {student.studentId.emailCount ?? 0}
+        </p>
+        <p>
+          <strong className="text-sky-700">Automatic Reminder Email:</strong>{" "}
+          <span className="inline-flex items-center">
+            <span
+              onClick={reminderLoading ? undefined : handleToggleReminder}
+              className={`relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in ${
+                reminderLoading
+                  ? "opacity-50 cursor-not-allowed"
+                  : "cursor-pointer"
+              }`}
+              style={{ verticalAlign: "middle" }}
+              role="checkbox"
+              aria-checked={!student.studentId.emailReminderDisable}
+              tabIndex={0}
+            >
+              <input
+                type="checkbox"
+                checked={!student.studentId.emailReminderDisable}
+                onChange={handleToggleReminder}
+                disabled={reminderLoading}
+                className="hidden"
+              />
+              <span
+                className={`block w-10 h-6 rounded-full transition-colors ${
+                  student.studentId.emailReminderDisable
+                    ? "bg-gray-300"
+                    : "bg-sky-500"
+                }`}
+              ></span>
+              <span
+                className={`absolute left-1 top-1 w-4 h-4 rounded-full bg-white shadow transform transition-transform ${
+                  student.studentId.emailReminderDisable
+                    ? "translate-x-0"
+                    : "translate-x-4"
+                }`}
+              ></span>
+            </span>
+            <span>
+              {student.studentId.emailReminderDisable ? "Disabled" : "Enabled"}
+            </span>
+          </span>
         </p>
       </div>
 

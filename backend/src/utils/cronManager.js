@@ -15,7 +15,6 @@ async function startCronJob() {
 
   cronJob = cron.schedule(cronTime, async () => {
     await fetchAndStoreCFData();
-    await notifyInactiveStudents();
   }, { scheduled: true });
 }
 

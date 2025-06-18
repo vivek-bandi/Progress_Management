@@ -61,7 +61,7 @@ exports.exportCSV = async (req, res) => {
     maxRating: s.maxRating || 0
   }));
 
-  console.log(cleanedStudents);
+  // console.log(cleanedStudents);
   const fields = [
     { label: 'Name', value: 'name' },
     { label: 'Email', value: 'email' },

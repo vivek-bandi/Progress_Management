@@ -12,7 +12,7 @@ const studentSchema = new mongoose.Schema({
     type : Number,
     default : 0
   },
-  emailRemainderDisable :{
+  emailReminderDisable :{
     type : Boolean,
     default : false
   }
