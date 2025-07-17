@@ -62,7 +62,7 @@ A full-stack MERN application to manage and visualize student progress on Codefo
 1. **Clone the repository:**
 
    ```sh
-   git clone https://github.com/vivek-bandi/Progess_Management.git
+   git clone https://github.com/vivek-bandi/Progress_Management.git
    cd Progess_Management
    ```
 
